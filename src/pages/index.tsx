@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import useMerkleContract from '../hooks/useMerkleContract';
 import { shortenAddress } from '../utils/address';
 import { getOnboard } from 'utils/walletUtils';
@@ -6,19 +6,18 @@ import { useWallet } from 'wallet/state';
 import { utils } from 'ethers';
 import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
-
-const users = [{ address: '0xDdeFbEA65E0520fC31470d3f92133a71A96b1641', amount: 10 }];
-
-const elements = users.map((x) => utils.solidityKeccak256(['address', 'uint256'], [x.address, x.amount]));
+import users from '../constants/users/UserData.json';
 
 const Home: React.FunctionComponent = () => {
   const merkleContract = useMerkleContract();
   const [state, dispatch] = useWallet();
-  const [address, setAddress] = useState<string | undefined>();
+  const [indexOfUser, setIndexOfUser] = useState<number | undefined>();
   const [amount, setAmount] = useState<number | undefined>();
   const [error, setError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [claimed, setClaimed] = useState<boolean>(false);
+
+  const elements = users.map((x) => utils.solidityKeccak256(['address', 'uint256'], [x.address, x.amount]));
   const merkleTree = new MerkleTree(elements, keccak256, { sort: true });
 
   const handleWallet = useCallback(async () => {
@@ -30,32 +29,42 @@ const Home: React.FunctionComponent = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!state.address) {
+      setClaimed(false);
+      return;
+    }
+    const indexOf = users.map((user) => user.address.toLowerCase()).indexOf(state.address.toLowerCase());
+    setIndexOfUser(indexOf);
+    if (indexOf === -1) {
+      setAmount(0);
+    } else {
+      setAmount(users[indexOf].amount);
+    }
+  }, [state.address]);
+
   // useEffect(() => {
   //   const root = merkleTree.getHexRoot();
   //   console.log(root);
   // }, []);
 
-  const claim = async (address) => {
-    const indexOf = users.map((user) => user.address.toLowerCase()).indexOf(address);
-
-    if (indexOf === -1) {
+  const claim = async () => {
+    if (indexOfUser === -1) {
       return;
     }
 
-    const leaf = elements[indexOf];
+    const leaf = elements[indexOfUser];
     const proof = merkleTree.getHexProof(leaf);
     try {
       setError(false);
       setLoading(true);
-      const tx = await merkleContract.claim(users[indexOf].address, users[indexOf].amount, proof);
+      const tx = await merkleContract.claim(state.address, users[indexOfUser].amount, proof);
       // const rc = await tx.wait(); // 0ms, as tx is already confirmed
       // const event = rc.events.find(
       //   (event) => event.event === 'Claimed' && event.args[0].toLowerCase() === address.toLowerCase()
       // );
-      setAmount(users[indexOf].amount);
       setLoading(false);
       setClaimed(true);
-      console.log('EVENT', event);
     } catch (error) {
       setError(true);
       setLoading(false);
@@ -71,20 +80,19 @@ const Home: React.FunctionComponent = () => {
       return;
     }
 
-    if (!address) {
-      return;
-    }
-
-    claim(state.address);
+    claim();
   };
 
   return (
     <div className="flex items-center justify-center px-6 py-10 mx-auto max-w-screen-2xl">
       <div className="w-full max-w-md">
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={submit}>
-          {!claimed && (
+          {!claimed && state.address && (
             <>
-              <div className="mb-4">
+              <p className="text-gray-700 text-lg font-bold my-4 text-center">{`Your wallet, ${shortenAddress(
+                state.address
+              )}, can claim ${amount} tokens.`}</p>
+              {/* <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Address</label>
                 <input
                   className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -94,11 +102,11 @@ const Home: React.FunctionComponent = () => {
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Address"
                 />
-              </div>
+              </div> */}
 
               <div className="flex items-center justify-between">
                 <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 w-full rounded focus:outline-none focus:shadow-outline flex justify-center items-center"
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 w-full rounded focus:outline-none focus:shadow-outline flex justify-center items-center"
                   type="submit"
                   disabled={!!loading}
                 >
@@ -130,11 +138,29 @@ const Home: React.FunctionComponent = () => {
               </div>
             </>
           )}
+
+          {!state.address && (
+            <>
+              <p className="text-gray-700 text-lg font-bold my-4 text-center">
+                Connect to see if you can claim tokens.
+              </p>
+
+              <button
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 w-full rounded focus:outline-none focus:shadow-outline flex justify-center items-center"
+                type="submit"
+                onClick={handleWallet}
+              >
+                Connect
+              </button>
+            </>
+          )}
+
           {!!error && <p className="text-red-500 text-xs italic mt-4">Claim transaction failed.</p>}
+
           {!!claimed && (
-            <p className="text-green-500 text-lg font-bold mt-4 text-center">{`${shortenAddress(
-              address
-            )} successfully claimed ${amount} tokens.`}</p>
+            <p className="text-green-500 text-lg font-bold mt-4 text-center">{`${
+              !!state?.address && shortenAddress(state.address)
+            } successfully claimed ${amount} tokens.`}</p>
           )}
         </form>
       </div>
