@@ -9,6 +9,9 @@ import keccak256 from 'keccak256';
 
 const users = [
   { address: '0xDdeFbEA65E0520fC31470d3f92133a71A96b1641', amount: 10 },
+  { address: '0xb7D15753D3F76e7C892B63db6b4729f700C01298', amount: 15 },
+  { address: '0xf69Ca530Cd4849e3d1329FBEC06787a96a3f9A68', amount: 20 },
+  { address: '0xa8532aAa27E9f7c3a96d754674c99F1E2f824800', amount: 30 },
 ];
 
 const elements = users.map((x) => utils.solidityKeccak256(['address', 'uint256'], [x.address, x.amount]));
