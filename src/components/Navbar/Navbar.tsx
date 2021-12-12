@@ -44,17 +44,17 @@ const Navbar: FC<unknown> = () => {
         <div className="flex items-center justify-between w-full px-2 lg:px-0 ">
           <div className="flex-shrink-0">
             <div onClick={goToHome} className="block w-auto h-full cursor-pointer text-2xl lg:hidden">
-              🍔
+              🏭
             </div>
             <div className="flex items-center">
               <div onClick={goToHome} className="hidden w-auto h-full cursor-pointer text-2xl lg:block">
-                🍔
+                🏭
               </div>
               <span
                 onClick={goToHome}
                 className="hidden h-auto pl-3 text-xl font-bold text-black cursor-pointer lg:block align-cente"
               >
-                McDapp
+                Membership Factory
               </span>
             </div>
           </div>

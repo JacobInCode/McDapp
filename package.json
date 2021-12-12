@@ -13,6 +13,8 @@
     "lint-fix": "yarn run lint --fix"
   },
   "dependencies": {
+    "@ethersproject/contracts": "^5.5.0",
+    "@ethersproject/providers": "^5.5.1",
     "@headlessui/react": "^1.4.1",
     "@heroicons/react": "^1.0.4",
     "@hookform/error-message": "^2.0.0",
