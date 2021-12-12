@@ -26,11 +26,13 @@ const renderListItem = ({ title, handler }: { title: string; handler?: () => voi
 const renderContent = (state, menuItems, swapColors = false) => (
   <div className="flex ">
     <ul
-      className={`${styles.dropdown} p-2 z-10 font-semibold  bg-main -bottom-1 flex flex-col text-black  right-0 min-w-max ${
+      className={`${
+        styles.dropdown
+      } p-2 z-10 font-semibold  bg-main -bottom-1 flex flex-col text-black  right-0 min-w-max ${
         swapColors ? ' w-full' : 'border border-black rounded bg-gray-400'
       } text-sm gap-y-4 px-4 py-4`}
     >
-      <li className='flex w-full px-4 py-3 bg-main gap-x-4'>
+      <li className="flex w-full px-4 py-3 bg-main gap-x-4">
         <Avatar sizeClasses="h-10 w-10 " username={state.address} />
         <div className="flex flex-col justify-center">
           <div>{Web3?.utils?.fromWei(state?.balance ?? '0')} ETH</div>

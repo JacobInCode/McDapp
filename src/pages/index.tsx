@@ -33,7 +33,9 @@ const Home: React.FunctionComponent = () => {
       return;
     }
 
-    if (!name || !symbol || !organization || !address) return;
+    if (!name || !symbol || !organization || !address) {
+      return;
+    }
 
     membershipFactoryContract.createMemberships(name, symbol, organization, transferable, address);
   };
