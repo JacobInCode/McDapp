@@ -1,6 +1,8 @@
 
 # Minimal Frontend for Membership Factory
 
+[DEMO](https://practical-engelbart-0d44c8.netlify.app/)
+
 Use this client to create Memebership Tokens. 
 Shouts out to R Group and Ezra!
 
