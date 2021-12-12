@@ -1,21 +1,30 @@
 import React, { useCallback, useState } from 'react';
-import useMembershipFactoryContract from '../hooks/useMembershipFactoryContract';
+import useMerkleContract from '../hooks/useMerkleContract';
+import { shortenAddress } from '../utils/address';
 import { getOnboard } from 'utils/walletUtils';
 import { useWallet } from 'wallet/state';
-import { Switch } from '@headlessui/react';
+import { utils } from 'ethers';
+import { MerkleTree } from 'merkletreejs';
+import keccak256 from 'keccak256';
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
+const users = [
+  { address: '0xDdeFbEA65E0520fC31470d3f92133a71A96b1641', amount: 10 },
+  { address: '0xb7D15753D3F76e7C892B63db6b4729f700C01298', amount: 15 },
+  { address: '0xf69Ca530Cd4849e3d1329FBEC06787a96a3f9A68', amount: 20 },
+  { address: '0xa8532aAa27E9f7c3a96d754674c99F1E2f824800', amount: 30 },
+];
+
+const elements = users.map((x) => utils.solidityKeccak256(['address', 'uint256'], [x.address, x.amount]));
 
 const Home: React.FunctionComponent = () => {
-  const membershipFactoryContract = useMembershipFactoryContract();
+  const merkleContract = useMerkleContract();
   const [state, dispatch] = useWallet();
-  const [name, setName] = useState<string | undefined>();
-  const [symbol, setSymbol] = useState<string | undefined>();
-  const [organization, setOrganization] = useState<string | undefined>();
   const [address, setAddress] = useState<string | undefined>();
-  const [transferable, setTransferable] = useState<boolean | undefined>(false);
+  const [amount, setAmount] = useState<number | undefined>();
+  const [error, setError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [claimed, setClaimed] = useState<boolean>(false);
+  const merkleTree = new MerkleTree(elements, keccak256, { sort: true });
 
   const handleWallet = useCallback(async () => {
     const onboard = getOnboard(dispatch);
@@ -26,102 +35,112 @@ const Home: React.FunctionComponent = () => {
     }
   }, []);
 
+  // useEffect(() => {
+  //   const root = merkleTree.getHexRoot();
+  //   console.log(root);
+  // }, []);
+
+  const claim = async (address) => {
+    const indexOf = users.map((user) => user.address.toLowerCase()).indexOf(address);
+
+    if (indexOf === -1) {
+      return;
+    }
+
+    const leaf = elements[indexOf];
+    const proof = merkleTree.getHexProof(leaf);
+    try {
+      setError(false);
+      setLoading(true);
+      const tx = await merkleContract.claim(users[indexOf].address, users[indexOf].amount, proof);
+      // const rc = await tx.wait(); // 0ms, as tx is already confirmed
+      // const event = rc.events.find(
+      //   (event) => event.event === 'Claimed' && event.args[0].toLowerCase() === address.toLowerCase()
+      // );
+      setAmount(users[indexOf].amount);
+      setLoading(false);
+      setClaimed(true);
+      console.log('EVENT', event);
+    } catch (error) {
+      setError(true);
+      setLoading(false);
+      console.log('ERROR', error);
+    }
+  };
+
   const submit = (e) => {
     e.preventDefault();
+
     if (!state.address) {
       handleWallet();
       return;
     }
 
-    if (!name || !symbol || !organization || !address) {
+    if (!address) {
       return;
     }
 
-    membershipFactoryContract.createMemberships(name, symbol, organization, transferable, address);
+    claim(state.address);
   };
 
   return (
     <div className="flex items-center justify-center px-6 py-10 mx-auto max-w-screen-2xl">
       <div className="w-full max-w-md">
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={submit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="Name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="McDAO Contract"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Symbol</label>
-            <input
-              className={`shadow appearance-none border ${''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-              id="Symbol"
-              type="text"
-              value={symbol}
-              onChange={(e) => setSymbol(e.target.value)}
-              placeholder="MCD"
-            />
-            {/* <p className="text-red-500 text-xs italic">Please choose a symbol.</p> */}
-          </div>
+          {!claimed && (
+            <>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Address</label>
+                <input
+                  className="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="Address"
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Address"
+                />
+              </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Organization</label>
-            <input
-              className={`shadow appearance-none border ${''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-              id="Organization"
-              type="text"
-              value={organization}
-              onChange={(e) => setOrganization(e.target.value)}
-              placeholder="McDAO"
-            />
-            {/* <p className="text-red-500 text-xs italic">Please choose a symbol.</p> */}
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Owner Address</label>
-            <input
-              className={`shadow appearance-none border ${''} rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline`}
-              id="Owner Address"
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="0x..."
-            />
-            {/* <p className="text-red-500 text-xs italic">Please choose a symbol.</p> */}
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Transferable</label>
-            <Switch
-              checked={transferable}
-              onChange={setTransferable}
-              className={classNames(
-                !transferable ? 'bg-gray-200' : 'bg-indigo-600',
-                'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-              )}
-            >
-              <span className="sr-only">Use setting</span>
-              <span
-                aria-hidden="true"
-                className={classNames(
-                  !transferable ? 'translate-x-0' : 'translate-x-5',
-                  'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
-                )}
-              />
-            </Switch>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 w-full rounded focus:outline-none focus:shadow-outline"
-              type="submit"
-            >
-              Create Membership Contract
-            </button>
-          </div>
+              <div className="flex items-center justify-between">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 w-full rounded focus:outline-none focus:shadow-outline flex justify-center items-center"
+                  type="submit"
+                  disabled={!!loading}
+                >
+                  {loading ? (
+                    <svg
+                      className="animate-spin ml-3 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    'Claim'
+                  )}
+                </button>
+              </div>
+            </>
+          )}
+          {!!error && <p className="text-red-500 text-xs italic mt-4">Claim transaction failed.</p>}
+          {!!claimed && (
+            <p className="text-green-500 text-lg font-bold mt-4 text-center">{`${shortenAddress(
+              address
+            )} successfully claimed ${amount} tokens.`}</p>
+          )}
         </form>
       </div>
     </div>
