@@ -1,18 +1,34 @@
 [
   {
     "address": "0xDdeFbEA65E0520fC31470d3f92133a71A96b1641",
-    "amount": 10
+    "amount": 1
   },
   {
-    "address": "0xb7D15753D3F76e7C892B63db6b4729f700C01298",
-    "amount": 15
+    "address": "0x4171160dB0e7E2C75A4973b7523B437C010Dd9d4",
+    "amount": 1
   },
   {
-    "address": "0xf69Ca530Cd4849e3d1329FBEC06787a96a3f9A68",
-    "amount": 20
+    "address": "0x303EeFeDeE1bA8e5d507a55465d946B2fea18583",
+    "amount": 1
   },
   {
-    "address": "0xa8532aAa27E9f7c3a96d754674c99F1E2f824800",
-    "amount": 30
+    "address": "0x8AbAf5733742B1506F6a1255de0e37aEc76b7940",
+    "amount": 1
+  },
+  {
+    "address": "0x559441FEf78b7E27b66db69C11e5B3827e1aea96",
+    "amount": 1
+  },
+  {
+    "address": "0x31CCc8AA169d738af9438758A9a3ac0E50f83edA",
+    "amount": 1
+  },
+  {
+    "address": "0x3b5EDe9A5652a9fb3C467fA2AfFF37E3736722C4",
+    "amount": 1
+  },
+  {
+    "address": "0x352ca2026033eA95EBcd198D5F922184820D514F",
+    "amount": 1
   }
 ]

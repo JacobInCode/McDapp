@@ -36,6 +36,7 @@ const Home: React.FunctionComponent = () => {
     }
     const indexOf = users.map((user) => user.address.toLowerCase()).indexOf(state.address.toLowerCase());
     setIndexOfUser(indexOf);
+    isClaimed(indexOf);
     if (indexOf === -1) {
       setAmount(0);
     } else {
@@ -43,10 +44,15 @@ const Home: React.FunctionComponent = () => {
     }
   }, [state.address]);
 
-  // useEffect(() => {
-  //   const root = merkleTree.getHexRoot();
-  //   console.log(root);
-  // }, []);
+  useEffect(() => {
+    const root = merkleTree.getHexRoot();
+    console.log('ROOT', root);
+  }, []);
+
+  const isClaimed = async (index) => {
+    const claimedStatus = await merkleContract.isClaimed(index);
+    console.log('CLAIMED', claimedStatus);
+  };
 
   const claim = async () => {
     if (indexOfUser === -1) {
@@ -55,10 +61,16 @@ const Home: React.FunctionComponent = () => {
 
     const leaf = elements[indexOfUser];
     const proof = merkleTree.getHexProof(leaf);
+    const root = merkleTree.getHexRoot();
+    console.log(users[indexOfUser].address, users[indexOfUser].amount);
+    console.log('TREE', leaf, merkleTree.verify(proof, leaf, root)); // true
+
+    console.log('PROOF', proof);
+
     try {
       setError(false);
       setLoading(true);
-      const tx = await merkleContract.claim(state.address, users[indexOfUser].amount, proof);
+      const tx = await merkleContract.claim(indexOfUser, 1, state.address, proof);
       // const rc = await tx.wait(); // 0ms, as tx is already confirmed
       // const event = rc.events.find(
       //   (event) => event.event === 'Claimed' && event.args[0].toLowerCase() === address.toLowerCase()
