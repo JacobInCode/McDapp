@@ -180,6 +180,12 @@ const Home: React.FunctionComponent = () => {
               >
                 Get your $Jacob
               </a>
+              <a
+                className="text-black-500 text-lg font-bold mt-4 text-center underline"
+                href={'https://opensea.io/collection/stockingstuffer'}
+              >
+                Stocking Stuffer Collection OpenSea
+              </a>
             </div>
           )}
         </form>
