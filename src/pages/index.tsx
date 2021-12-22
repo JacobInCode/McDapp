@@ -170,9 +170,17 @@ const Home: React.FunctionComponent = () => {
           {!!error && <p className="text-red-500 text-xs italic mt-4">Claim transaction failed.</p>}
 
           {!!claimed && (
-            <p className="text-green-500 text-lg font-bold mt-4 text-center">{`${
-              !!state?.address && shortenAddress(state.address)
-            } successfully claimed ${amount} tokens.`}</p>
+            <div className="flex flex-col">
+              <p className="text-green-500 text-lg font-bold mt-4 text-center">{`${
+                !!state?.address && shortenAddress(state.address)
+              } successfully claimed ${amount} tokens. Click link below to collect your infused $Jacob!`}</p>
+              <a
+                className="text-black-500 text-lg font-bold mt-4 text-center underline"
+                href={'https://app.hypervibes.xyz/claim/realm/9/select-token'}
+              >
+                Get your $Jacob
+              </a>
+            </div>
           )}
         </form>
       </div>
