@@ -11,7 +11,7 @@ const wallets = [
   { walletName: 'metamask', preferred: true },
   {
     walletName: 'walletConnect',
-    infuraKey: 'a0da77ed4a744c6b8eb8850f22e49553',
+    infuraKey: 'f744238ecde747519e5973389b1240e0',
   },
 ];
 
