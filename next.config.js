@@ -8,4 +8,5 @@ module.exports = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  distDir: 'out',
 };
