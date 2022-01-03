@@ -1,6 +1,14 @@
 import { ethers } from 'ethers';
 
-export type WalletAction = SET_ADDRESS | SET_NETWORK | SET_BALANCE | SET_WALLET | SET_WEB3 | SET_ENS | RESET;
+export type WalletAction =
+  | SET_ADDRESS
+  | SET_NETWORK
+  | SET_BALANCE
+  | SET_WALLET
+  | SET_WEB3
+  | SET_EXTERNAL_PROVIDER
+  | SET_ENS
+  | RESET;
 
 type SET_ADDRESS = {
   type: 'SET_ADDRESS';
@@ -27,6 +35,11 @@ type SET_WALLET = {
 type SET_WEB3 = {
   type: 'SET_WEB3';
   payload: ethers.providers.Web3Provider;
+};
+
+type SET_EXTERNAL_PROVIDER = {
+  type: 'SET_EXTERNAL_PROVIDER';
+  payload: ethers.providers.JsonRpcProvider;
 };
 
 type SET_ENS = {

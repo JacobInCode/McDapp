@@ -1,17 +1,16 @@
 import Onboard from 'bnc-onboard';
 import { WalletAction } from 'wallet/actions';
 import { ethers } from 'ethers';
-import { NETWORK_ID, NETWORK_NAME } from './constants';
+import { NETWORK_ID, INFURA_KEY } from './constants';
 
 let onboard: ReturnType<typeof Onboard>;
 
 // the network id that your dapp runs on
 const wallets = [
-  { walletName: 'coinbase', preferred: true },
   { walletName: 'metamask', preferred: true },
   {
     walletName: 'walletConnect',
-    infuraKey: 'a0da77ed4a744c6b8eb8850f22e49553',
+    infuraKey: INFURA_KEY,
   },
 ];
 

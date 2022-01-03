@@ -1,9 +1,9 @@
-import { createRaribleSdk } from '@rarible/protocol-ethereum-sdk';
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
-import { NETWORK_ID, NETWORK_NAME } from 'utils/constants';
+import { NETWORK_ID, RPC_URL } from 'utils/constants';
 import { ethers } from 'ethers';
 import type { WalletAction } from './actions';
 import reducer from './reducers';
+import { JsonRpcProvider } from '@ethersproject/providers';
 
 export const initialState: WalletState = {
   balance: '-1',
@@ -11,6 +11,7 @@ export const initialState: WalletState = {
   wallet: { name: '' },
   network: Number.parseInt(NETWORK_ID),
   web3: undefined,
+  external: new JsonRpcProvider(RPC_URL),
   ens: undefined,
 };
 
@@ -20,6 +21,7 @@ type WalletState = {
   wallet: { name: string };
   network: number;
   web3?: ethers.providers.Web3Provider;
+  external?: ethers.providers.JsonRpcProvider;
   ens: string;
 };
 

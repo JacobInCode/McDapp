@@ -20,7 +20,7 @@ const Form: React.FunctionComponent = () => {
   const [state, dispatch] = useWallet();
   const tokenFactory = useTokenFactory();
   const [loading, setLoading] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean | null>(null);
+  const [error, setError] = useState<string>();
   const router = useRouter();
 
   const handleWallet = useCallback(async () => {
@@ -34,6 +34,7 @@ const Form: React.FunctionComponent = () => {
 
   const onSubmit = async (data) => {
     try {
+      setError('');
       setLoading(true);
       if (!state?.address) {
         handleWallet();
@@ -48,12 +49,13 @@ const Form: React.FunctionComponent = () => {
       );
       const res = await tx.wait();
       console.log(res.events[0].address);
+      router.push(`/token/${res.events[0].address}`);
 
       setLoading(false);
-      router.push(`/token/${res.events[0].address}`);
-    } catch (error) {
+    } catch (err) {
       setLoading(false);
-      console.log('ERROR', error.message);
+      console.log('ERROR', err.message);
+      setError(err.message);
     }
   };
 
@@ -111,6 +113,7 @@ const Form: React.FunctionComponent = () => {
           'Deploy'
         )}
       </button>
+      <p className="text-red-600 font-medium">{error}</p>
     </form>
   );
 };
