@@ -5,7 +5,6 @@ import { TOKEN_CONTRACT_ADDRESS } from '../constants/contracts';
 
 export default () => {
   const [state] = useWallet();
-  const contract = useContract(TOKEN_CONTRACT_ADDRESS[state.network], tokenFactoryAbi);
-
+  const contract = useContract(TOKEN_CONTRACT_ADDRESS[state.network], tokenFactoryAbi, true);
   return contract;
 };

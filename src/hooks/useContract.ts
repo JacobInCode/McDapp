@@ -1,6 +1,5 @@
 import { useWallet } from 'wallet/state';
-import { ContractInterface } from '@ethersproject/contracts';
-import { getContract } from '../utils/contract';
+import { Contract, ContractInterface } from '@ethersproject/contracts';
 import { Web3Provider } from '@ethersproject/providers';
 
 export default (contractAddress: string, abi: ContractInterface, signed?: boolean) => {
@@ -20,7 +19,5 @@ export default (contractAddress: string, abi: ContractInterface, signed?: boolea
     provider = new Web3Provider(state?.web3?.provider);
   }
 
-  const contract = getContract(contractAddress, abi, provider);
-
-  return contract;
+  return new Contract(contractAddress, abi, signed ? provider.getSigner() : provider);
 };

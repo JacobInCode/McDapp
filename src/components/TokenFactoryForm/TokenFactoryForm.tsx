@@ -35,12 +35,11 @@ const Form: React.FunctionComponent = () => {
   const onSubmit = async (data) => {
     try {
       setError('');
-      setLoading(true);
       if (!state?.address) {
         handleWallet();
         return;
       }
-
+      setLoading(true);
       const tx = await tokenFactory.deployERC20Token(
         data.name,
         data.symbol,
@@ -49,7 +48,7 @@ const Form: React.FunctionComponent = () => {
       );
       const res = await tx.wait();
       console.log(res.events[0].address);
-      router.push(`/token/${res.events[0].address}`);
+      await router.push(`/token/${res.events[0].address}`);
 
       setLoading(false);
     } catch (err) {
