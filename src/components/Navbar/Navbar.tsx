@@ -39,22 +39,22 @@ const Navbar: FC<unknown> = () => {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-20 bg-primary shadow-md">
-      <div className="flex px-2 py-3.5 mx-auto md:py-0 md:h-24 max-w-screen-2xl sm:px-4 lg:px-8">
+    <nav className="sticky top-0 z-20 bg-primary shadow-sm">
+      <div className="flex px-2 py-2.5 mx-auto max-w-screen-2xl sm:px-4 lg:px-8">
         <div className="flex items-center justify-between w-full px-2 lg:px-0 ">
           <div className="flex-shrink-0">
             <div onClick={goToHome} className="block w-auto h-full cursor-pointer text-2xl lg:hidden">
-              🧦
+              🏭
             </div>
             <div className="flex items-center">
               <div onClick={goToHome} className="hidden w-auto h-full cursor-pointer text-2xl lg:block">
-                🧦
+                🏭
               </div>
               <span
                 onClick={goToHome}
                 className="hidden h-auto pl-3 text-xl font-bold text-black cursor-pointer lg:block align-cente"
               >
-                Jacob's Stocking Stuffers
+                Token Factory
               </span>
             </div>
           </div>

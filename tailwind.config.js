@@ -6,7 +6,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
-      sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
+      sans: ['Courier New', ...defaultTheme.fontFamily.sans],
       serif: ['Optima', ...defaultTheme.fontFamily.serif],
       mono: [...defaultTheme.fontFamily.mono],
     },

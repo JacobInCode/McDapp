@@ -10,9 +10,6 @@ const queryClient = new QueryClient({});
 const App: FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   return (
     <WalletProvider>
-      <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-      <style>model-viewer {'{height:100%;max-height:100%;}'}</style>
-
       <QueryClientProvider client={queryClient}>
         <Navbar />
         <Component {...pageProps} />
