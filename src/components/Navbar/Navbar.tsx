@@ -43,17 +43,11 @@ const Navbar: FC<unknown> = () => {
       <div className="flex px-2 py-2.5 mx-auto max-w-screen-2xl sm:px-4 lg:px-8">
         <div className="flex items-center justify-between w-full px-2 lg:px-0 ">
           <div className="flex-shrink-0">
-            <div onClick={goToHome} className="block w-auto h-full cursor-pointer text-2xl lg:hidden">
-              🥦
-            </div>
             <div className="flex items-center">
-              <div onClick={goToHome} className="hidden w-auto h-full cursor-pointer text-2xl lg:block">
+              <div onClick={goToHome} className=" w-auto h-full cursor-pointer text-2xl">
                 🥦
               </div>
-              <span
-                onClick={goToHome}
-                className="hidden h-auto pl-3 text-xl font-bold text-black cursor-pointer lg:block align-cente"
-              >
+              <span onClick={goToHome} className="h-auto pl-3 text-xl font-bold text-black cursor-pointer align-center">
                 420 DAO
               </span>
             </div>

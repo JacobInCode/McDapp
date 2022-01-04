@@ -16,9 +16,7 @@ const Home: React.FunctionComponent = () => {
         <div className="flex flex-col space-y-2 p-10 items-start justify-center max-w-2xl bg-white shadow-lg rounded-lg border-2 border-gray-200 w-full hover:shadow-xl cursor-pointer">
           <div className="flex items-center">
             🏭
-            <span className="hidden h-auto pl-3 text-xl font-bold text-black cursor-pointer lg:block align-cente">
-              Token Factory
-            </span>
+            <span className="h-auto pl-3 text-xl font-bold text-black cursor-pointer align-cente">Token Factory</span>
           </div>
         </div>
       </Link>
