@@ -25,7 +25,6 @@ const Form: React.FunctionComponent = () => {
 
   const handleWallet = useCallback(async () => {
     const onboard = getOnboard(dispatch);
-
     const selected = await onboard.walletSelect(localStorage.getItem('walletName'));
     if (selected) {
       await onboard.walletCheck();
@@ -93,7 +92,7 @@ const Form: React.FunctionComponent = () => {
         <input {...register('owner', { required: true })} className={inputClass} placeholder="0xABCD..." />
       </div>
 
-      <button type="submit" className="bg-blue-600 text-white py-2 rounded mt-3 flex items-center justify-center">
+      <button type="submit" className="bg-green-600 text-white py-2 rounded mt-3 flex items-center justify-center">
         {loading ? (
           <svg
             className="animate-spin ml-3 mr-3 h-5 w-5 text-white"

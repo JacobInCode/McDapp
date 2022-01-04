@@ -6,9 +6,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
-      sans: ['Courier New', ...defaultTheme.fontFamily.sans],
-      serif: ['Optima', ...defaultTheme.fontFamily.serif],
-      mono: [...defaultTheme.fontFamily.mono],
+      sans: ['Chalkboard', ...defaultTheme.fontFamily.sans],
+      // serif: ['Optima', ...defaultTheme.fontFamily.serif],
+      // mono: [...defaultTheme.fontFamily.mono],
     },
     extend: {
       fontSize: {

@@ -54,7 +54,7 @@ const Token = () => {
         {!token && (
           <div className="h-60 flex items-center justify-center w-full">
             <svg
-              className="animate-spin ml-3 mr-3 h-8 w-8 text-blue-400"
+              className="animate-spin ml-3 mr-3 h-8 w-8 text-green-400"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -91,7 +91,7 @@ const Token = () => {
               {token.ownerAddress}
             </div>
             <a href={token.blockScannerURL} target="_blank" className="underline font-bold">
-              Checkout on Etherscan &rarr;
+              Checkout on Polyscan &rarr;
             </a>
           </div>
         )}
